@@ -133,6 +133,7 @@ public class Grid {
                                 tilesDeleted = true;
                                 List<RemoveTiles> marked = MarkAdjanced(x, y, new ArrayList<RemoveTiles>());
                                 upgrade.add(FindUpgrade(marked));
+                                remove.addAll(marked);
 
                             }
                         }
