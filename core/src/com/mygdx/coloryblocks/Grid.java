@@ -78,12 +78,11 @@ public class Grid {
     public void render(final SpriteBatch spriteBatch) {
         for (int x = 0; x < this.tiles.length; x++) {
             for (int y = 0; y < this.tiles[x].length; y++) {
-                // TODO: Draw the tile
                 float screenWidth = Gdx.graphics.getWidth();
                 float screenHeight = Gdx.graphics.getHeight();
                 final Texture texture = assetProvider.get(this.textures.get(this.tiles[x][y]));
-                spriteBatch.draw(texture, x*(screenWidth/(this.tiles.length)), y*(screenHeight/this.tiles[x].length+1),
-                        screenWidth/(this.tiles.length),screenHeight/this.tiles[x].length+1);
+                spriteBatch.draw(texture, x*(screenWidth/(this.tiles.length)), y*(screenHeight/(this.tiles[x].length)),
+                        screenWidth/(this.tiles.length),screenHeight/(this.tiles[x].length));
             }
         }
     }
@@ -295,27 +294,47 @@ public class Grid {
         for (int x = 0; x < this.tiles.length; x++) {
             if (this.tiles[x][this.tiles[x].length - 2] != 0) {
                 if (x == this.tiles.length - 1) {
-                    this.tiles[x - 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 2];
-                    this.tiles[x][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 1];
-                    this.tiles[x][this.tiles[x].length - 1] = 0;
-                    return true;
+                    if (this.tiles[x-1][this.tiles[x].length - 2] == 0 && this.tiles[x][this.tiles[x].length - 1] == 0){
+                        return true; // It was a single block.
+                    } else {
+                        this.tiles[x - 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 2];
+                        this.tiles[x][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 1];
+                        this.tiles[x][this.tiles[x].length - 1] = 0;
+                        return true;
+                    }
                 } else if (this.tiles[x][this.tiles[x].length - 1] != 0) {
                     this.tiles[x + 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 1];
                     this.tiles[x][this.tiles[x].length - 1] = 0;
                     return true;
                 } else {
-                    this.tiles[x][this.tiles[x].length - 1] = this.tiles[x][this.tiles[x].length - 2];
-                    this.tiles[x][this.tiles[x].length - 2] = this.tiles[x + 1][this.tiles[x].length - 2];
-                    this.tiles[x + 1][this.tiles[x].length - 2] = 0;
-                    return true;
+                    if (x == 0) {
+                        if (this.tiles[x + 1][this.tiles[x].length - 2] == 0 && this.tiles[x][this.tiles[x].length - 1] == 0) {
+                            return true; // It was a single block.
+                        } else {
+                            this.tiles[x][this.tiles[x].length - 1] = this.tiles[x][this.tiles[x].length - 2];
+                            this.tiles[x][this.tiles[x].length - 2] = this.tiles[x + 1][this.tiles[x].length - 2];
+                            this.tiles[x + 1][this.tiles[x].length - 2] = 0;
+                            return true;
+                        }
+                    } else {
+                        if (this.tiles[x-1][this.tiles[x].length - 2] == 0 && this.tiles[x][this.tiles[x].length - 1] == 0
+                                && this.tiles[x+1][this.tiles[x].length-2] == 0){
+                            return true; // It was a single block.
+                        }
+                        else {
+                            this.tiles[x][this.tiles[x].length - 1] = this.tiles[x][this.tiles[x].length - 2];
+                            this.tiles[x][this.tiles[x].length - 2] = this.tiles[x + 1][this.tiles[x].length - 2];
+                            this.tiles[x + 1][this.tiles[x].length - 2] = 0;
+                            return true;
+                        }
+                    }
                 }
-
             }
         }
         return false;
     }
 
-    public void moveLeft() {
+    public boolean moveLeft() {
         for (int x = 1; x < this.tiles.length; x++) {
             if (this.tiles[x][this.tiles[x].length - 2] != 0) { //If a tile is not blank.
                 if (this.tiles[x - 1][this.tiles[x].length - 2] == 0) { // If there is free space on the left
@@ -324,14 +343,29 @@ public class Grid {
                         this.tiles[x][this.tiles[x].length - 1] = 0;
                         this.tiles[x - 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 2];
                         this.tiles[x][this.tiles[x].length - 2] = 0;
+                        return true;
                     } else {
-                        this.tiles[x - 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 2];
-                        this.tiles[x][this.tiles[x].length - 2] = this.tiles[x + 1][this.tiles[x].length - 2];
-                        this.tiles[x + 1][this.tiles[x].length - 2] = 0;
+                        if (x != this.tiles.length-1){
+                            if (this.tiles[x+1][this.tiles[x].length - 2] != 0) { // If there is block on the right
+                                this.tiles[x - 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 2];
+                                this.tiles[x][this.tiles[x].length - 2] = this.tiles[x + 1][this.tiles[x].length - 2];
+                                this.tiles[x + 1][this.tiles[x].length - 2] = 0;
+                                return true;
+                            } else {
+                                this.tiles[x - 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 2];
+                                this.tiles[x][this.tiles[x].length - 2] = 0;
+                                return true;
+                            }
+                        } else {
+                                this.tiles[x - 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 2];
+                                this.tiles[x][this.tiles[x].length - 2] = 0;
+                                return true;
+                        }
                     }
                 }
             }
         }
+        return false;
     }
 
 
@@ -345,16 +379,33 @@ public class Grid {
                         this.tiles[x + 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 2];
                         this.tiles[x][this.tiles[x].length - 2] = 0;
                         return true;
-                    } else {
-                        this.tiles[x + 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 2];
-                        this.tiles[x][this.tiles[x].length - 2] = this.tiles[x-1][this.tiles[x].length - 2];
-                        this.tiles[x-1][this.tiles[x].length - 2] = 0;
-                        return true;
+                    } else { // If there is blocks sideways or only one block
+                        if (x != 0 && x < this.tiles.length-1){ // The block is on neither side.
+                            if (this.tiles[x-1][this.tiles[x].length - 2] != 0) { // If there's tile on the left
+                                this.tiles[x + 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 2];
+                                this.tiles[x][this.tiles[x].length - 2] = this.tiles[x-1][this.tiles[x].length - 2];
+                                this.tiles[x-1][this.tiles[x].length - 2] = 0;
+                                return true;
+                            } else { //It is a solo block.
+                                this.tiles[x + 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 2];
+                                this.tiles[x][this.tiles[x].length - 2] = 0;
+                                return true;
+                            }
+                        }
+                        else if (x == 0){ //Block is on the left side.
+                            if (this.tiles[x+1][this.tiles[x].length - 2] != 0) { // If there's tile on the right
+                                return true; // Then the block pair is already on the right side.
+                            } else { //It is a solo block.
+                                this.tiles[x + 1][this.tiles[x].length - 2] = this.tiles[x][this.tiles[x].length - 2];
+                                this.tiles[x][this.tiles[x].length - 2] = 0;
+                                return true;
+                            }
+                        }
                     }
                 }
             }
         }
-        return false;
+        return true;
     }
 
     public void newBlock() {
