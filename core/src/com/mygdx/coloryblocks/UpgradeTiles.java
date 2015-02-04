@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.coloryblocks;
 
 public class UpgradeTiles {
     private final int x;

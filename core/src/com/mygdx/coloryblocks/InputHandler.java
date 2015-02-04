@@ -1,26 +1,46 @@
-package com.mygdx.game;
+package com.mygdx.coloryblocks;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Vector2;
 
 import static java.lang.Math.abs;
 
 public class InputHandler implements InputProcessor {
     private final Game game;
+    private final Input.Keys keys;
     private int currentX;
     private int currentY;
     private int currentCommand = 0; // 0 = Don't do anything, 1 = up, 2 = down, 3 = left, 4 = right.
 
     public InputHandler(final Game game) {
         this.game = game;
+        keys = new Input.Keys();
 
         Gdx.input.setInputProcessor(this);
     }
 
     @Override
     public boolean keyDown(final int keycode) {
-        return false;
+        if (keys.toString(keycode) == "Up"){
+            currentCommand = 1;
+        }
+        else if (keys.toString(keycode) == "Down"){
+            currentY = 0;
+            currentCommand = 2;
+        }
+        else if (keys.toString(keycode) == "Right"){
+            currentCommand = 4;
+        }
+        else if (keys.toString(keycode) == "Left") {
+            currentCommand = 3;
+        }
+        else{
+            currentCommand = 0;
+        }
+        game.commitCommand(currentCommand);
+        return true;
+
     }
 
     @Override

@@ -1,10 +1,10 @@
-package com.mygdx.game.android;
+package com.mygdx.coloryblocks.android;
 
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.mygdx.game.Game;
+import com.mygdx.coloryblocks.Game;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override

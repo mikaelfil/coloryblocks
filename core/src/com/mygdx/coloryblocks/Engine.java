@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.coloryblocks;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 

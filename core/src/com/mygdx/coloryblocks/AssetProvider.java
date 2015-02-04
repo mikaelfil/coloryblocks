@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.coloryblocks;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
