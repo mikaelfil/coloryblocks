@@ -23,7 +23,9 @@ public class Grid {
             AssetProvider.TextureAsset.TILE_PINK,
             AssetProvider.TextureAsset.TILE_WHITE,
             AssetProvider.TextureAsset.TILE_GRAY,
-            AssetProvider.TextureAsset.TILE_BLACK);
+            AssetProvider.TextureAsset.TILE_BLACK,
+            AssetProvider.TextureAsset.TILE_DOWN,
+            AssetProvider.TextureAsset.TILE_SIDES);
     final int[][] tiles;
     int highest;
 
@@ -37,6 +39,10 @@ public class Grid {
                 this.tiles[x][y] = 0;
             }
         }
+
+        Random newTile = new Random();
+        this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 2] = newTile.nextInt((highest - 2) + 1) + 1;
+        this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 1] = newTile.nextInt((highest - 2) + 1) + 1;
     }
 
     public boolean dropTiles() {
@@ -167,6 +173,14 @@ public class Grid {
                         }
                     }
                 }
+                if (this.tiles[x][y] == 13) {
+                    tilesDeleted = true;
+                    RemoveColumn(x);
+                }
+                if (this.tiles[x][y] == 14){
+                    tilesDeleted = true;
+                    RemoveRow(y);
+                }
             }
         }
 
@@ -174,6 +188,18 @@ public class Grid {
             removeAndUpgrade(remove, upgrade);
         }
         return tilesDeleted;
+    }
+
+    private void RemoveRow(final int y) {
+        for (int x = 0; x < this.tiles.length; x++) {
+            this.tiles[x][y] = 0;
+        }
+    }
+
+    private void RemoveColumn(final int x) {
+        for (int y = 0; y < this.tiles[x].length; y++) {
+            this.tiles[x][y] = 0;
+        }
     }
 
     private UpgradeTiles FindUpgrade(List<RemoveTiles> marked) {
@@ -332,9 +358,16 @@ public class Grid {
     }
 
     public void newBlock() {
-        Random newTile = new Random();
-        this.tiles[this.tiles.length/2][this.tiles[this.tiles.length/2].length-2] = newTile.nextInt((highest - 2) + 1)+1;
-        this.tiles[this.tiles.length/2][this.tiles[this.tiles.length/2].length-1] = newTile.nextInt((highest - 2) + 1)+1;
+        Random choice = new Random();
+        if(choice.nextInt(100)+1 < 98) {
+            Random newTile = new Random();
+            this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 2] = newTile.nextInt((highest - 2) + 1) + 1;
+            this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 1] = newTile.nextInt((highest - 2) + 1) + 1;
+        }
+        else {
+            Random specialTile = new Random();
+            this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 2] = specialTile.nextInt(2) + 13;
+        }
     }
 }
 

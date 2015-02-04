@@ -15,7 +15,6 @@ public class Engine {
         this.assetProvider = new AssetProvider();
         this.grid = new Grid(this.assetProvider, COLUMNS, ROWS);
 
-        grid.newBlock();
         areWeMoving = true;
     }
 

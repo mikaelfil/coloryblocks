@@ -21,7 +21,9 @@ public class AssetProvider implements Disposable {
         TILE_PINK("pink.png"),
         TILE_WHITE("white.png"),
         TILE_GRAY("gray.png"),
-        TILE_BLACK("black.png");
+        TILE_BLACK("black.png"),
+        TILE_DOWN("ArrowDown.png"),
+        TILE_SIDES("ArrowSides.png");
 
         private final String file;
 
