@@ -25,9 +25,12 @@ public class Grid {
             AssetProvider.TextureAsset.TILE_GRAY,
             AssetProvider.TextureAsset.TILE_BLACK,
             AssetProvider.TextureAsset.TILE_DOWN,
-            AssetProvider.TextureAsset.TILE_SIDES);
+            AssetProvider.TextureAsset.TILE_SIDES,
+            AssetProvider.TextureAsset.TILE_COLORWIPE);
     final int[][] tiles;
     int highest;
+    static int toBeTile;
+    static int toBeTile2;
 
     public Grid(final AssetProvider assetProvider, final int columns, final int rows) {
         this.assetProvider = assetProvider;
@@ -41,8 +44,9 @@ public class Grid {
         }
 
         Random newTile = new Random();
-        this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 2] = newTile.nextInt((highest - 2) + 1) + 1;
-        this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 1] = newTile.nextInt((highest - 2) + 1) + 1;
+        toBeTile = newTile.nextInt((highest - 2) + 1) + 1;
+        toBeTile2 = newTile.nextInt((highest - 2) + 1) + 1;
+        this.newBlock();
     }
 
     public boolean dropTiles() {
@@ -76,15 +80,23 @@ public class Grid {
     }
 
     public void render(final SpriteBatch spriteBatch) {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
         for (int x = 0; x < this.tiles.length; x++) {
             for (int y = 0; y < this.tiles[x].length; y++) {
-                float screenWidth = Gdx.graphics.getWidth();
-                float screenHeight = Gdx.graphics.getHeight();
                 final Texture texture = assetProvider.get(this.textures.get(this.tiles[x][y]));
                 spriteBatch.draw(texture, x*(screenWidth/(this.tiles.length)), y*(screenHeight/(this.tiles[x].length)),
                         screenWidth/(this.tiles.length),screenHeight/(this.tiles[x].length));
             }
         }
+
+        final Texture toBe = assetProvider.get(this.textures.get(toBeTile));
+        final Texture toBe2 = assetProvider.get(this.textures.get(toBeTile2));
+        spriteBatch.draw(toBe, 0, ((this.tiles[0].length-1)*screenHeight/(this.tiles[0].length)),
+                screenWidth/(this.tiles.length)/4,screenHeight/(this.tiles[0].length)/4);
+        spriteBatch.draw(toBe2, 0, ((this.tiles[0].length-1)*screenHeight/(this.tiles[0].length)+
+                        screenHeight/(this.tiles[0].length)/4),screenWidth/(this.tiles.length)/4,
+                        screenHeight/(this.tiles[0].length)/4);
     }
 
     public boolean checkGameOver() {
@@ -172,13 +184,18 @@ public class Grid {
                         }
                     }
                 }
-                if (this.tiles[x][y] == 13) {
+                if (this.tiles[x][y] == 13) {  //Remove row
                     tilesDeleted = true;
                     RemoveColumn(x);
                 }
-                if (this.tiles[x][y] == 14){
+                if (this.tiles[x][y] == 14){ //Remove column
                     tilesDeleted = true;
                     RemoveRow(y);
+                }
+                if (this.tiles[x][y] == 15){ //Remove all of the same color
+                    tilesDeleted = true;
+                    this.tiles[x][y] = 0;
+                    RemoveColor(this.tiles[x][y-1]);
                 }
             }
         }
@@ -187,6 +204,16 @@ public class Grid {
             removeAndUpgrade(remove, upgrade);
         }
         return tilesDeleted;
+    }
+
+    private void RemoveColor(int i) {
+        for (int x = 0; x < this.tiles.length; x++) {
+            for (int y = 0; y < this.tiles[x].length; y++) {
+                if (this.tiles[x][y] == i) {
+                    this.tiles[x][y] = 0;
+                }
+            }
+        }
     }
 
     private void RemoveRow(final int y) {
@@ -409,16 +436,23 @@ public class Grid {
     }
 
     public void newBlock() {
+        System.out.println(toBeTile + " ja " + toBeTile2);
+
+        this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 2] = toBeTile;
+        this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 1] = toBeTile2;
+
         Random choice = new Random();
         if(choice.nextInt(100)+1 < 98) {
             Random newTile = new Random();
-            this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 2] = newTile.nextInt((highest - 2) + 1) + 1;
-            this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 1] = newTile.nextInt((highest - 2) + 1) + 1;
+            toBeTile = newTile.nextInt((highest - 2) + 1) + 1;
+            toBeTile2 = newTile.nextInt((highest - 2) + 1) + 1;
         }
         else {
             Random specialTile = new Random();
-            this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 2] = specialTile.nextInt(2) + 13;
+            toBeTile = specialTile.nextInt(3) + 13;
+            toBeTile2 = 0;
         }
+        System.out.println(toBeTile + " ja " + toBeTile2);
     }
 }
 

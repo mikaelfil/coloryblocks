@@ -23,7 +23,8 @@ public class AssetProvider implements Disposable {
         TILE_GRAY("gray.png"),
         TILE_BLACK("black.png"),
         TILE_DOWN("ArrowDown.png"),
-        TILE_SIDES("ArrowSides.png");
+        TILE_SIDES("ArrowSides.png"),
+        TILE_COLORWIPE("colorwipe.png");
 
         private final String file;
 

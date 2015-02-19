@@ -69,17 +69,17 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDragged(final int screenX, final int screenY, final int pointer) {
-        if (screenY < currentY-50 && abs(screenY-currentY) > abs(screenX - currentX)){
+        if (screenY < currentY-42 && abs(screenY-currentY) > abs(screenX - currentX)){
             currentCommand = 1;
         }
-        else if (screenY > currentY+50 && abs(screenY-currentY) > abs(screenX-currentX)) {
+        else if (screenY > currentY+42 && abs(screenY-currentY) > abs(screenX-currentX)) {
             currentY = 0;
             currentCommand = 2;
         }
-        else if (screenX > currentX+50 && abs(screenX-currentX) > abs(screenY - currentY)){
+        else if (screenX > currentX+42 && abs(screenX-currentX) > abs(screenY - currentY)){
             currentCommand = 4;
         }
-        else if (screenX < currentX-50 && abs(screenX-currentX) > abs(screenY-currentY)) {
+        else if (screenX < currentX-42 && abs(screenX-currentX) > abs(screenY-currentY)) {
             currentCommand = 3;
         }
         else{
