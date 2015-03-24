@@ -2,6 +2,7 @@ package com.mygdx.coloryblocks;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
@@ -32,8 +33,13 @@ public class Grid {
     static int toBeTile;
     static int toBeTile2;
 
+    private int score;
+    private int highscore;
+
     public Grid(final AssetProvider assetProvider, final int columns, final int rows) {
         this.assetProvider = assetProvider;
+        score = 0;
+        highscore = 0;
         this.tiles = new int[columns][rows];
         highest = 4;
 
@@ -72,6 +78,7 @@ public class Grid {
         i = 0;
         while (i < upgrade.size()) {
             tiles[upgrade.get(i).getX()][upgrade.get(i).getY()] = upgrade.get(i).getValue() + 1;
+            score = score+upgrade.get(i).getValue();
             if (upgrade.get(i).getValue() + 1 > highest){
                 highest = upgrade.get(i).getValue() + 1;
             }
@@ -79,7 +86,7 @@ public class Grid {
         }
     }
 
-    public void render(final SpriteBatch spriteBatch) {
+    public void render(final SpriteBatch spriteBatch, BitmapFont font) {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
         for (int x = 0; x < this.tiles.length; x++) {
@@ -92,11 +99,17 @@ public class Grid {
 
         final Texture toBe = assetProvider.get(this.textures.get(toBeTile));
         final Texture toBe2 = assetProvider.get(this.textures.get(toBeTile2));
-        spriteBatch.draw(toBe, 0, ((this.tiles[0].length-1)*screenHeight/(this.tiles[0].length)),
+        spriteBatch.draw(toBe, 0, ((this.tiles[0].length-1)*screenHeight/(this.tiles[0].length))-20,
                 screenWidth/(this.tiles.length)/4,screenHeight/(this.tiles[0].length)/4);
         spriteBatch.draw(toBe2, 0, ((this.tiles[0].length-1)*screenHeight/(this.tiles[0].length)+
-                        screenHeight/(this.tiles[0].length)/4),screenWidth/(this.tiles.length)/4,
+                        screenHeight/(this.tiles[0].length)/4)-20,screenWidth/(this.tiles.length)/4,
                         screenHeight/(this.tiles[0].length)/4);
+
+        final String score_string = "Score: " + Integer.toString(score);
+        final String highscore_string = "Highscore: " + Integer.toString(highscore);
+
+        font.draw(spriteBatch, score_string,0,screenHeight);
+        font.draw(spriteBatch, highscore_string,0,screenHeight-20);
     }
 
     public boolean checkGameOver() {
@@ -314,7 +327,14 @@ public class Grid {
                 this.tiles[x][y] = 0;
             }
         }
+        if (score > highscore){
+            highscore = score;
+        }
+        score = 0;
         highest = 4;
+        Random newTile = new Random();
+        toBeTile = newTile.nextInt((highest - 2) + 1) + 1;
+        toBeTile2 = newTile.nextInt((highest - 2) + 1) + 1;
     }
 
     public boolean spin() {
@@ -436,7 +456,6 @@ public class Grid {
     }
 
     public void newBlock() {
-        System.out.println(toBeTile + " ja " + toBeTile2);
 
         this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 2] = toBeTile;
         this.tiles[this.tiles.length / 2][this.tiles[this.tiles.length / 2].length - 1] = toBeTile2;

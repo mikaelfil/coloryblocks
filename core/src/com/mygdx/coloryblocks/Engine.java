@@ -1,5 +1,6 @@
 package com.mygdx.coloryblocks;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Engine {
@@ -18,8 +19,8 @@ public class Engine {
         areWeMoving = true;
     }
 
-    void render(final SpriteBatch spriteBatch) {
-        grid.render(spriteBatch);
+    void render(final SpriteBatch spriteBatch, BitmapFont font) {
+        grid.render(spriteBatch, font);
     }
 
     public void commitCommand(int currentCommand) {
