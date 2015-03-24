@@ -1,5 +1,6 @@
 package com.mygdx.coloryblocks;
 
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -12,9 +13,9 @@ public class Engine {
 
     private boolean areWeMoving;
 
-    public Engine() {
+    public Engine(Preferences prefs) {
         this.assetProvider = new AssetProvider();
-        this.grid = new Grid(this.assetProvider, COLUMNS, ROWS);
+        this.grid = new Grid(this.assetProvider, prefs, COLUMNS, ROWS);
 
         areWeMoving = true;
     }

@@ -2,6 +2,7 @@ package com.mygdx.coloryblocks;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,11 +12,13 @@ public class Game extends ApplicationAdapter {
     Engine engine;
     InputHandler inputHandler;
     BitmapFont font;
+    Preferences prefs;
 	
 	@Override
 	public void create () {
 		this.spriteBatch = new SpriteBatch();
-        this.engine = new Engine();
+        this.prefs = Gdx.app.getPreferences("Preferences");
+        this.engine = new Engine(prefs);
         this.inputHandler = new InputHandler(this);
         this.font = new BitmapFont();
 	}

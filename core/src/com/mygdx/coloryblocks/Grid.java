@@ -1,6 +1,7 @@
 package com.mygdx.coloryblocks;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,13 +34,15 @@ public class Grid {
     static int toBeTile;
     static int toBeTile2;
 
+    Preferences prefs;
     private int score;
     private int highscore;
 
-    public Grid(final AssetProvider assetProvider, final int columns, final int rows) {
+    public Grid(final AssetProvider assetProvider, Preferences prefs, final int columns, final int rows) {
         this.assetProvider = assetProvider;
         score = 0;
-        highscore = 0;
+        this.prefs = prefs;
+        highscore = prefs.getInteger("highscore",0);
         this.tiles = new int[columns][rows];
         highest = 4;
 
@@ -329,6 +332,8 @@ public class Grid {
         }
         if (score > highscore){
             highscore = score;
+            prefs.putInteger("highscore",highscore);
+            prefs.flush();
         }
         score = 0;
         highest = 4;
